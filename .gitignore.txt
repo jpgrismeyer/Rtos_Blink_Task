@@ -1,0 +1,17 @@
+# STM32CubeIDE & build artifacts
+.settings/
+.mxproject
+.cproject
+.project
+Debug/
+Release/
+build/
+*.launch
+*.elf
+*.map
+*.bin
+*.hex
+Core/Inc/*~
+Core/Src/*~
+.DS_Store
+Thumbs.db
