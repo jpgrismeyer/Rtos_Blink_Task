@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "string.h"    // strlen
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -78,7 +78,7 @@ static void MX_USB_OTG_FS_PCD_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
-
+void StartUartTask(void *argument);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -149,7 +149,12 @@ int main(void)
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+  const osThreadAttr_t uartTask_attributes = {
+    .name = "UART",
+    .stack_size = 256 * 4,                 // un poco más de stack que Blink
+    .priority = (osPriority_t) osPriorityNormal
+  };
+  osThreadNew(StartUartTask, NULL, &uartTask_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -688,6 +693,15 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+void StartUartTask(void *argument)
+{
+  const char *msg = "Hello from FreeRTOS\r\n";
+  for(;;)
+  {
+    HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), 100);
+    osDelay(1000);
+  }
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
